@@ -51,18 +51,24 @@ namespace Treehouse.FitnessFrog.Controllers
             return View(entry);
         }
 
-        [ActionName("Add"), HttpPost]
-        public ActionResult AddPost(Entry entry)
+        //[ActionName("Add"), HttpPost]
+        [HttpPost]
+        public ActionResult Add(Entry entry)
         {
+            ViewBag.SelectListItem = new SelectList(Data.Data.Activities, "Id", "Name");
+
+            if(ModelState.IsValidField("Duration") && entry.Duration <= 0 )
+            {
+                ModelState.AddModelError("Duration", "The duration field must be greater than 0");
+            }
+
             if (ModelState.IsValid)
             {
                 _entriesRepository.AddEntry(entry);
 
                 return RedirectToAction("Index");
             }
-
-            //ViewBag.SelectListItem = new SelectList(Data.Data.Activities, "Id", "Name");
-
+            
             return View(entry);
         }
 
